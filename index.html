@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icono_investigacion.png">
+<link rel="apple-touch-icon" href="icono_investigacion.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0d2b45">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IM · UNP">
+<title>Investigación de Mercados – UNP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0d2b45;--blue:#1a3a5c;--mid:#2560a0;--accent:#e8a020;--gold:#f5c842;
+    --light:#eef4fb;--white:#fff;--text:#0d2b45;--muted:#5a7a9a;--card:#fff;
+    --border:#cde0f5;--green:#1e7d4b;--red:#b82c2c;--orange:#c96c10;
+    --purple:#6b3fa0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Sora',sans-serif;background:var(--light);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+  /* TOPBAR */
+  .topbar{background:var(--navy);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+  .topbar-inner{display:flex;align-items:center;gap:10px;padding:10px 14px 8px}
+  .topbar-logo{width:38px;height:38px;border-radius:9px;overflow:hidden;flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center}
+  .topbar-logo img{width:100%;height:100%;object-fit:cover}
+  .topbar-title{flex:1}
+  .topbar-title h1{font-size:13px;font-weight:700;color:#fff;line-height:1.2}
+  .topbar-title p{font-size:10px;color:rgba(255,255,255,.6);margin-top:1px}
+  .topbar-badge{background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;flex-shrink:0}
+
+  /* NAV */
+  .nav{background:var(--blue);display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:2px solid rgba(255,255,255,.1)}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-btn{flex:0 0 auto;padding:9px 13px;color:rgba(255,255,255,.6);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+  .nav-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+  .nav-btn:active{opacity:.7}
+
+  /* SECTIONS */
+  .section{display:none;padding:14px;animation:fadeIn .25s ease}
+  .section.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--mid) 100%);border-radius:16px;padding:18px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden}
+  .hero::after{content:'IM';font-family:'DM Serif Display';font-size:110px;color:rgba(255,255,255,.04);position:absolute;right:-8px;bottom:-18px;line-height:1}
+  .hero-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .hero-icon{width:48px;height:48px;border-radius:10px;overflow:hidden;background:#fff;flex-shrink:0}
+  .hero-icon img{width:100%;height:100%;object-fit:cover}
+  .hero-text h2{font-family:'DM Serif Display',serif;font-size:18px;line-height:1.3}
+  .hero-text p{font-size:10px;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.4}
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:12px}
+  .hero-stat{background:rgba(255,255,255,.1);border-radius:9px;padding:9px 6px;text-align:center}
+  .hero-stat .num{font-size:18px;font-weight:700;color:var(--gold)}
+  .hero-stat .lbl{font-size:9px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+  /* CARDS */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:14px;margin-bottom:11px;cursor:pointer;transition:box-shadow .2s}
+  .card:active{box-shadow:0 0 0 2px var(--mid)}
+  .card-header{display:flex;align-items:flex-start;gap:11px}
+  .card-icon{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+  .card-icon.blue{background:#dbeeff}.card-icon.amber{background:#fef3dc}
+  .card-icon.green{background:#ddf4e8}.card-icon.red{background:#fde8e8}
+  .card-icon.purple{background:#ede8ff}.card-icon.teal{background:#d8f5f0}
+  .card-body{flex:1}
+  .card-body h3{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px}
+  .card-body p{font-size:11px;color:var(--muted);line-height:1.4}
+  .card-meta{display:flex;align-items:center;gap:6px;margin-top:9px;flex-wrap:wrap}
+  .tag{font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px}
+  .tag.unidad{background:#dbeeff;color:#185fa5}.tag.mes{background:#fff3dc;color:#8a5800}
+  .tag.horas{background:#ddf4e8;color:#1e6b3a}.tag.metodo{background:#ede8ff;color:#4a1f80}
+  .tag.pendiente{background:#fde8e8;color:#a32d2d}.tag.entregado{background:#ddf4e8;color:#1e6b3a}
+  .tag.pronto{background:#fff3dc;color:#8a5800}
+  .expand-content{display:none;margin-top:11px;border-top:1px solid var(--border);padding-top:11px}
+  .expand-content.open{display:block;animation:fadeIn .2s ease}
+  .expand-content ul{padding-left:16px}
+  .expand-content li{font-size:11px;color:var(--muted);margin-bottom:4px;line-height:1.4}
+  .expand-content li::marker{color:var(--mid)}
+
+  /* UNIDAD NUM */
+  .unidad-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:var(--mid);color:#fff;border-radius:50%;font-size:12px;font-weight:700;flex-shrink:0}
+
+  /* SECTION TITLE */
+  .section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:11px;margin-top:2px}
+
+  /* TIMELINE */
+  .timeline{position:relative;padding-left:22px}
+  .timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:var(--border)}
+  .tl-item{position:relative;margin-bottom:14px}
+  .tl-dot{position:absolute;left:-17px;top:4px;width:11px;height:11px;border-radius:50%;border:2px solid var(--mid);background:#fff}
+  .tl-dot.done{background:var(--mid)}.tl-dot.current{background:var(--accent);border-color:var(--accent)}
+  .tl-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 11px}
+  .tl-card h4{font-size:12px;font-weight:700;color:var(--navy)}
+  .tl-card p{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
+  .tl-card .week{font-size:9px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+
+  /* TP CARDS */
+  .tp-card{background:var(--card);border:1px solid var(--border);border-radius:13px;margin-bottom:11px;overflow:hidden}
+  .tp-header{padding:13px 14px;display:flex;align-items:center;gap:11px;cursor:pointer}
+  .tp-num{width:34px;height:34px;background:var(--accent);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+  .tp-info h4{font-size:13px;font-weight:700;color:var(--navy)}
+  .tp-info p{font-size:10px;color:var(--muted);margin-top:1px}
+  .tp-chevron{margin-left:auto;font-size:16px;color:var(--muted);transition:transform .2s}
+  .tp-chevron.open{transform:rotate(180deg)}
+  .tp-body{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
+  .tp-body.open{display:block;animation:fadeIn .2s ease}
+  .tp-obj{background:#f0f7ff;border-radius:8px;padding:9px 11px;margin:11px 0 9px;font-size:11px;color:var(--blue);line-height:1.5}
+  .tp-steps{padding-left:18px}
+  .tp-steps li{font-size:11px;color:var(--muted);margin-bottom:5px;line-height:1.4}
+  .tp-steps li::marker{color:var(--accent);font-weight:700}
+  .tp-entrega{margin-top:9px;display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700}
+  .tp-entrega span{color:var(--orange)}
+
+  /* TAREAS */
+  .tarea-item{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px 14px;margin-bottom:9px;display:flex;align-items:flex-start;gap:11px}
+  .tarea-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;margin-top:3px}
+  .tarea-dot.pendiente{background:#e24b4a}.tarea-dot.pronto{background:#ef9f27}.tarea-dot.entregado{background:#1e7d4b}
+  .tarea-content h4{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px}
+  .tarea-content p{font-size:10px;color:var(--muted);line-height:1.4}
+  .tarea-fecha{font-size:10px;font-weight:700;margin-top:5px}
+  .tarea-fecha.red{color:var(--red)}.tarea-fecha.amber{color:var(--orange)}.tarea-fecha.green{color:var(--green)}
+  .aula-btn{display:flex;align-items:center;gap:10px;background:var(--navy);color:#fff;border-radius:11px;padding:13px 14px;margin-bottom:11px;font-size:12px;font-weight:600;cursor:pointer}
+  .aula-btn span.icon{font-size:20px}
+  .aula-note{font-size:10px;color:var(--muted);text-align:center;margin-top:7px;padding:9px;background:#fff;border-radius:9px;border:1px dashed var(--border);line-height:1.5}
+
+  /* QUIZ */
+  .quiz-wrap{background:var(--card);border-radius:15px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
+  .quiz-session-tabs{display:flex;background:var(--light);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+  .quiz-session-tabs::-webkit-scrollbar{display:none}
+  .qs-tab{flex:0 0 auto;padding:9px 14px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+  .qs-tab.active{color:var(--mid);border-bottom-color:var(--mid);background:#fff}
+  .quiz-header{background:var(--navy);color:#fff;padding:14px}
+  .quiz-header h3{font-size:15px;font-weight:700;margin-bottom:3px}
+  .quiz-header p{font-size:11px;color:rgba(255,255,255,.65)}
+  .quiz-progress{height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:9px}
+  .quiz-progress-bar{height:4px;background:var(--gold);border-radius:2px;transition:width .4s}
+  .quiz-body{padding:14px}
+  .quiz-q-num{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:5px}
+  .quiz-q-text{font-size:14px;font-weight:600;color:var(--navy);line-height:1.5;margin-bottom:14px}
+  .quiz-options{display:flex;flex-direction:column;gap:7px}
+  .quiz-opt{padding:11px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:12px;cursor:pointer;transition:all .15s;background:#fff;text-align:left;width:100%;color:var(--text)}
+  .quiz-opt:hover{border-color:var(--mid);background:#f0f7ff}
+  .quiz-opt.correct{border-color:var(--green);background:#ddf4e8;color:var(--green);font-weight:600}
+  .quiz-opt.wrong{border-color:var(--red);background:#fde8e8;color:var(--red)}
+  .quiz-opt.disabled{pointer-events:none}
+  .quiz-feedback{margin-top:11px;padding:9px 11px;border-radius:8px;font-size:11px;line-height:1.5}
+  .quiz-feedback.correct{background:#ddf4e8;color:var(--green)}
+  .quiz-feedback.wrong{background:#fde8e8;color:var(--red)}
+  .quiz-nav{display:flex;gap:9px;margin-top:14px}
+  .btn{padding:10px 18px;border-radius:9px;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;border:none;cursor:pointer;flex:1;transition:opacity .15s}
+  .btn:active{opacity:.75}
+  .btn-primary{background:var(--mid);color:#fff}
+  .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
+  .quiz-result{text-align:center;padding:22px 14px}
+  .quiz-result .score{font-size:48px;font-weight:700;color:var(--mid);font-family:'DM Serif Display',serif}
+  .quiz-result .score-sub{font-size:13px;color:var(--muted);margin-top:3px}
+  .quiz-result .msg{font-size:13px;color:var(--navy);font-weight:600;margin-top:14px;margin-bottom:18px}
+
+  /* MATERIALES */
+  .mat-card{background:var(--card);border:1px solid var(--border);border-radius:13px;margin-bottom:11px;overflow:hidden}
+  .mat-header{padding:13px 14px;display:flex;align-items:center;gap:11px}
+  .mat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .mat-info{flex:1}
+  .mat-info h4{font-size:13px;font-weight:700;color:var(--navy)}
+  .mat-info p{font-size:10px;color:var(--muted);margin-top:1px}
+  .mat-btn{padding:7px 13px;border-radius:8px;font-size:11px;font-weight:700;border:none;cursor:pointer;transition:opacity .15s;flex-shrink:0}
+  .mat-btn:active{opacity:.75}
+  .mat-btn.blue{background:#dbeeff;color:#185fa5}
+  .mat-btn.green{background:#ddf4e8;color:var(--green)}
+  .mat-btn.amber{background:#fff3dc;color:#8a5800}
+  .mat-btn.red{background:#fde8e8;color:var(--red)}
+  .mat-btn.purple{background:#ede8ff;color:var(--purple)}
+  .mat-upload-area{margin:0 14px 14px;border:2px dashed var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:border-color .2s}
+  .mat-upload-area:hover{border-color:var(--mid)}
+  .mat-upload-area p{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4}
+  .mat-upload-area .upload-icon{font-size:30px;margin-bottom:4px}
+  .mat-link-row{display:flex;align-items:center;gap:8px;padding:9px 11px;background:var(--light);border-radius:8px;margin:4px 14px}
+  .mat-link-row .link-icon{font-size:16px;flex-shrink:0}
+  .mat-link-row .link-text{flex:1;font-size:11px;color:var(--navy);font-weight:600}
+  .mat-link-row .link-sub{font-size:9px;color:var(--muted)}
+  .mat-link-btn{font-size:10px;font-weight:700;color:var(--mid);cursor:pointer;background:none;border:none}
+  .mat-section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:11px 14px 5px}
+  .mat-add-form{padding:11px 14px;border-top:1px solid var(--border)}
+  .mat-add-form input{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:9px;font-family:'Sora',sans-serif;font-size:12px;color:var(--navy);background:var(--light);outline:none;transition:border-color .2s;margin-bottom:7px}
+  .mat-add-form input:focus{border-color:var(--mid);background:#fff}
+  .mat-add-form select{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:9px;font-family:'Sora',sans-serif;font-size:12px;color:var(--navy);background:var(--light);outline:none;margin-bottom:7px;appearance:none}
+  .mat-add-btn{width:100%;padding:10px;background:var(--mid);color:#fff;border:none;border-radius:9px;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s}
+  .mat-add-btn:active{opacity:.8}
+  .mat-empty{text-align:center;padding:20px 14px;color:var(--muted);font-size:12px}
+  .mat-empty .empty-icon{font-size:36px;margin-bottom:8px}
+
+  /* INFO */
+  .info-block{background:var(--card);border-radius:13px;border:1px solid var(--border);padding:14px;margin-bottom:11px}
+  .info-block h4{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:9px;display:flex;align-items:center;gap:5px}
+  .info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border)}
+  .info-row:last-child{border-bottom:none}
+  .info-row .key{font-size:11px;color:var(--muted)}
+  .info-row .val{font-size:11px;font-weight:600;color:var(--navy);text-align:right;max-width:58%}
+  .install-tip{background:linear-gradient(135deg,var(--accent),#c17a0a);color:#fff;border-radius:13px;padding:14px;margin-bottom:11px}
+  .install-tip h4{font-size:13px;font-weight:700;margin-bottom:5px}
+  .install-tip p,.install-tip ol li{font-size:10px;line-height:1.5;opacity:.9}
+  .install-tip ol{padding-left:15px;margin-top:6px}
+
+  /* CONFIG */
+  .config-block{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:14px;margin-bottom:13px}
+  .config-block h4{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:13px;display:flex;align-items:center;gap:5px}
+  .config-field{margin-bottom:11px}
+  .config-field label{display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .config-field input{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:9px;font-family:'Sora',sans-serif;font-size:12px;color:var(--navy);background:var(--light);outline:none;transition:border-color .2s}
+  .config-field input:focus{border-color:var(--mid);background:#fff}
+  .config-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+  .config-stat-field label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px}
+  .config-stat-field input{width:100%;padding:7px 8px;border:1.5px solid var(--border);border-radius:9px;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--mid);background:var(--light);outline:none;text-align:center;transition:border-color .2s}
+  .config-stat-field input.lbl-input{font-size:10px;font-weight:600;color:var(--muted);margin-top:3px}
+  .btn-save{width:100%;padding:12px;background:var(--mid);color:#fff;border:none;border-radius:11px;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:3px;transition:opacity .15s}
+  .btn-save:active{opacity:.8}
+  .save-msg{text-align:center;font-size:12px;font-weight:600;color:var(--green);padding:9px;background:#ddf4e8;border-radius:9px;margin-top:9px;display:none}
+  .config-preview{background:linear-gradient(135deg,var(--navy) 0%,var(--mid) 100%);border-radius:11px;padding:13px;color:#fff;margin-bottom:13px}
+  .config-preview p{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+  .config-preview h3{font-family:'DM Serif Display',serif;font-size:15px;line-height:1.3}
+  .config-preview span{font-size:10px;color:rgba(255,255,255,.65)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-logo">
+      <img src="data:image/jpeg;base64,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" alt="IM">
+    </div>
+    <div class="topbar-title">
+      <h1 id="dynTitle">Investigación de Mercados</h1>
+      <p id="dynSub">Adm. de Empresas · 3er Curso · FCCAE – UNP</p>
+    </div>
+    <div class="topbar-badge" id="dynAnio">2025</div>
+  </div>
+  <nav class="nav" id="nav">
+    <button class="nav-btn active" data-sec="inicio">Inicio</button>
+    <button class="nav-btn" data-sec="programa">Programa</button>
+    <button class="nav-btn" data-sec="estrategias">Estrategias</button>
+    <button class="nav-btn" data-sec="cronograma">Cronograma</button>
+    <button class="nav-btn" data-sec="tp">Prácticos</button>
+    <button class="nav-btn" data-sec="tareas">Tareas</button>
+    <button class="nav-btn" data-sec="materiales">📁 Materiales</button>
+    <button class="nav-btn" data-sec="examen">Simulacro</button>
+    <button class="nav-btn" data-sec="info">Info</button>
+    <button class="nav-btn" data-sec="config">⚙️</button>
+  </nav>
+</div>
+
+<!-- =================== INICIO =================== -->
+<div class="section active" id="sec-inicio">
+  <div class="hero">
+    <div class="hero-top">
+      <div class="hero-icon">
+        <img src="data:image/jpeg;base64,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" alt="IM">
+      </div>
+      <div class="hero-text">
+        <h2 id="heroTitle">Investigación de Mercados</h2>
+        <p id="heroSub">Adm. de Empresas · 3er Curso<br>MSc Rubén Martínez · UNP</p>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" id="hNum1">9</div><div class="lbl" id="hLbl1">Unidades</div></div>
+      <div class="hero-stat"><div class="num" id="hNum2">30</div><div class="lbl" id="hLbl2">Semanas</div></div>
+      <div class="hero-stat"><div class="num" id="hNum3">85</div><div class="lbl" id="hLbl3">Horas</div></div>
+    </div>
+  </div>
+
+  <p class="section-title">Accesos rápidos</p>
+  <div class="card" onclick="goTo('programa')">
+    <div class="card-header">
+      <div class="card-icon blue">📋</div>
+      <div class="card-body"><h3>Programa de Estudios</h3><p>9 unidades con todos los contenidos programáticos del curso.</p></div>
+    </div>
+  </div>
+  <div class="card" onclick="goTo('estrategias')">
+    <div class="card-header">
+      <div class="card-icon purple">🎓</div>
+      <div class="card-body"><h3>Estrategias de Enseñanza y Evaluación</h3><p>Técnicas didácticas y sistema de evaluación del curso.</p></div>
+    </div>
+  </div>
+  <div class="card" onclick="goTo('cronograma')">
+    <div class="card-header">
+      <div class="card-icon teal">📅</div>
+      <div class="card-body"><h3>Cronograma de Clases</h3><p>Desarrollo semana a semana: Marzo a Octubre 2025.</p></div>
+    </div>
+  </div>
+  <div class="card" onclick="goTo('tp')">
+    <div class="card-header">
+      <div class="card-icon amber">⚗️</div>
+      <div class="card-body"><h3>Trabajos Prácticos</h3><p>4 trabajos prácticos con instrucciones detalladas.</p></div>
+    </div>
+  </div>
+  <div class="card" onclick="goTo('materiales')">
+    <div class="card-header">
+      <div class="card-icon green">📁</div>
+      <div class="card-body"><h3>Materiales Didácticos</h3><p>Archivos, enlaces y recursos subidos por el docente.</p></div>
+    </div>
+  </div>
+  <div class="card" onclick="goTo('tareas')">
+    <div class="card-header">
+      <div class="card-icon red">📌</div>
+      <div class="card-body"><h3>Tareas Aula Virtual Moodle</h3><p>Actividades y entregas con fechas límite visibles.</p></div>
+    </div>
+  </div>
+  <div class="card" onclick="goTo('examen')">
+    <div class="card-header">
+      <div class="card-icon blue">🎯</div>
+      <div class="card-body"><h3>Simulacro de Examen</h3><p>4 sesiones de práctica con preguntas y retroalimentación.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== PROGRAMA =================== -->
+<div class="section" id="sec-programa">
+  <p class="section-title">Programa de estudios – 9 Unidades</p>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="unidad-num">I</div><div class="card-body"><h3>Introducción a la Investigación de Mercados</h3><p>Conceptos, terminologías, SIM y variables de mercadotecnia.</p></div></div>
+    <div class="card-meta"><span class="tag unidad">Unidad I</span><span class="tag mes">Marzo S1–S2</span></div>
+    <div class="expand-content"><ul>
+      <li>Introducción a la Investigación de Mercados</li>
+      <li>El papel de la investigación de mercados. Concepto</li>
+      <li>Terminologías frecuentemente utilizadas</li>
+      <li>Datos primarios y secundarios</li>
+      <li>Sistema de Información de Mercadotecnia (SIM)</li>
+      <li>Variables controlables y no controlables de Mercadotecnia</li>
+      <li>Muestreo, encuesta, censo, población o universo</li>
+      <li>Otras terminologías</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="unidad-num">II</div><div class="card-body"><h3>Planeación de la Investigación de Mercados</h3><p>Decisiones, ética y roles en la investigación.</p></div></div>
+    <div class="card-meta"><span class="tag unidad">Unidad II</span><span class="tag mes">Marzo S3–S4</span></div>
+    <div class="expand-content"><ul>
+      <li>Decisión de llevar a cabo la investigación</li>
+      <li>Consideraciones preliminares para conducir una investigación</li>
+      <li>La relación gerencia – Investigación</li>
+      <li>Personas que realizan una investigación de mercado</li>
+      <li>Errores en la investigación de mercados</li>
+      <li>La ética en la investigación de mercados</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="unidad-num">III</div><div class="card-body"><h3>Proceso de la Investigación de Mercados</h3><p>Los 10 pasos del proceso completo de investigación.</p></div></div>
+    <div class="card-meta"><span class="tag unidad">Unidad III</span><span class="tag mes">Abril S1–S4</span></div>
+    <div class="expand-content"><ul>
+      <li>Reconocer y definir el problema</li>
+      <li>Establecer la necesidad de información</li>
+      <li>Especificar los objetivos de la investigación y las necesidades de información</li>
+      <li>Determinar el diseño de la investigación y las fuentes de datos</li>
+      <li>Desarrollar el procedimiento de recolección de datos</li>
+      <li>Diseñar la muestra</li>
+      <li>Recolectar los datos</li>
+      <li>Procesar los datos</li>
+      <li>Analizar los datos</li>
+      <li>Presentar los resultados de la investigación</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="unidad-num">IV</div><div class="card-body"><h3>Tipos y Métodos de Investigación de Mercados</h3><p>Exploratorio, descriptivo, causal, encuestas y observación.</p></div></div>
+    <div class="card-meta"><span class="tag unidad">Unidad IV</span><span class="tag mes">Abril S5 – Mayo S5</span></div>
+    <div class="expand-content"><ul>
+      <li>Tipos de investigación: Exploratorio, descriptivo y causal</li>
+      <li>Sesiones de grupos (Focus Group)</li>
+      <li>Entrevista en profundidad</li>
+      <li>Técnicas de proyección</li>
+      <li>Método de encuesta: Telefónica, por correo, personal</li>
+      <li>Métodos de observación: Personal, mecánica, auditorias</li>
+      <li>Comparación entre métodos de encuestas y observación</li>
+      <li>Método de experimentación: De laboratorio y de campo</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="unidad-num">V</div><div class="card-body"><h3>Diseño y Selección de la Muestra</h3><p>Muestreo probabilístico y no probabilístico. Tamaño de muestra.</p></div></div>
+    <div class="card-meta"><span class="tag unidad">Unidad V</span><span class="tag mes">Junio S2–S5</span></div>
+    <div class="expand-content"><ul>
+      <li>Muestreo: Concepto e importancia</li>
+      <li>Muestras probabilísticas o aleatorias: aleatorio simple, sistemático, estratificado, por conglomerados o por área</li>
+      <li>Muestras no probabilísticas: por conveniencia, por juicio, por cuotas, bola de nieve</li>
+      <li>Determinación del tamaño de la muestra</li>
+      <li>Tamaño de muestra para estimar la media de la población</li>
+      <li>Tamaño de muestra para estimar la proporción de la población</li>
+      <li>Usos del muestreo no probabilístico y probabilístico</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="unidad-num">VI</div><div class="card-body"><h3>Recolección de Datos o Trabajo de Campo</h3><p>Selección, capacitación y supervisión de encuestadores.</p></div></div>
+    <div class="card-meta"><span class="tag unidad">Unidad VI</span><span class="tag mes">Julio S1–S2 / Agosto S2–S3</span></div>
+    <div class="expand-content"><ul>
+      <li>Selección y capacitación de los encuestadores</li>
+      <li>El contacto inicial. Cómo hacer las preguntas</li>
+      <li>Registro de las respuestas. Cómo terminar la entrevista</li>
+      <li>Supervisión de los encuestadores</li>
+      <li>Validación del trabajo de campo</li>
+      <li>Evaluación de los encuestadores</li>
+      <li>Tiempo y costo. Índice de respuesta</li>
+      <li>Calidad de la entrevista y calidad de los datos</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="unidad-num">VII</div><div class="card-body"><h3>Preparación, Análisis e Interpretación de Datos</h3><p>Edición, codificación, tabulación y estadística inferencial.</p></div></div>
+    <div class="card-meta"><span class="tag unidad">Unidad VII</span><span class="tag mes">Agosto S4 – Sep S2</span></div>
+    <div class="expand-content"><ul>
+      <li>Preparación: Edición, codificación y depuración de los datos</li>
+      <li>Análisis univariado de datos</li>
+      <li>Tabulación: Simple y cruzada</li>
+      <li>Estadística inferencial: Estimación de parámetros</li>
+      <li>Estimación por intervalo de confianza</li>
+      <li>Intervalos de confianza para la media y para la proporción</li>
+      <li>Prueba de hipótesis para la media poblacional</li>
+      <li>Prueba de hipótesis para proporciones</li>
+      <li>Prueba ji cuadrado</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="unidad-num">VIII</div><div class="card-body"><h3>Informe sobre los Hallazgos de la Investigación</h3><p>Elaboración de informes escritos y presentación oral.</p></div></div>
+    <div class="card-meta"><span class="tag unidad">Unidad VIII</span><span class="tag mes">Septiembre S3–S4</span></div>
+    <div class="expand-content"><ul>
+      <li>Guías para elaborar informes escritos</li>
+      <li>Formato del informe</li>
+      <li>Presentación de los datos: Uso de tablas y ayudas gráficas</li>
+      <li>Presentación oral</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="unidad-num">IX</div><div class="card-body"><h3>Aplicaciones de la Investigación de Mercados</h3><p>Demanda, publicidad, distribución, precios y mercados internacionales.</p></div></div>
+    <div class="card-meta"><span class="tag unidad">Unidad IX</span><span class="tag mes">Octubre S1–S5</span></div>
+    <div class="expand-content"><ul>
+      <li>Medición y pronóstico de la demanda</li>
+      <li>Investigación de productos y prueba de mercadeo</li>
+      <li>Investigación publicitaria, de distribución y de precios</li>
+      <li>El ambiente de mercado: gubernamental, económico, informativo-tecnológico, sociocultural y competitivo</li>
+      <li>Fuentes de información en los mercados internacionales</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- =================== ESTRATEGIAS =================== -->
+<div class="section" id="sec-estrategias">
+  <p class="section-title">Estrategias de enseñanza y aprendizaje</p>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="card-icon blue">🎤</div><div class="card-body"><h3>Exposición Didáctica</h3><p>Introducción, cuerpo y síntesis para temas teóricos.</p></div></div>
+    <div class="expand-content"><ul>
+      <li><strong>Uso:</strong> Temas de contenido teórico o informativo, especialmente al iniciar una unidad nueva.</li>
+      <li><strong>Fases:</strong> Introducción (información básica) → Cuerpo (información detallada) → Síntesis (cierre con énfasis en aspectos resaltantes).</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="card-icon purple">👥</div><div class="card-body"><h3>Estudio Dirigido en Grupo</h3><p>Grupos de 4 a 10 alumnos para intercambiar ideas y resolver situaciones.</p></div></div>
+    <div class="expand-content"><ul>
+      <li>El docente presenta un tema o problema a discutir.</li>
+      <li>El grupo intercambia experiencias, ideas y conocimientos.</li>
+      <li>Propicia la creatividad, participación, reflexión y análisis.</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="card-icon amber">📄</div><div class="card-body"><h3>Estudio de Casos</h3><p>Análisis detallado de un documento con información de un caso real.</p></div></div>
+    <div class="expand-content"><ul>
+      <li>El docente entrega un documento con toda la información del caso.</li>
+      <li>Los alumnos realizan análisis minucioso y obtienen conclusiones significativas.</li>
+      <li>Estimula el análisis, la reflexión y el pensamiento crítico.</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="card-icon green">📖</div><div class="card-body"><h3>Lectura Comentada</h3><p>Lectura guiada con comentarios, consultas y profundización del docente.</p></div></div>
+    <div class="expand-content"><ul>
+      <li>Los alumnos leen el documento bajo la conducción del docente.</li>
+      <li>El docente hace comentarios, responde consultas y profundiza aspectos relevantes.</li>
+      <li>Proporciona mucha información en tiempo relativamente corto.</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="card-icon teal">🎓</div><div class="card-body"><h3>Seminarios</h3><p>Grupos de 4 a 6 alumnos que estudian y presentan un tema conjuntamente.</p></div></div>
+    <div class="expand-content"><ul>
+      <li>El profesor escoge los temas, realiza preguntas y emite conclusiones al final.</li>
+      <li>Los alumnos presentan y defienden trabajos de investigación bibliográfica.</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="card-icon red">🔢</div><div class="card-body"><h3>Solución de Problemas y Ejercicios</h3><p>Complemento de la teoría mediante casos numéricos o de múltiples soluciones.</p></div></div>
+    <div class="expand-content"><ul>
+      <li>Se usa cuando se quiere entrenar al alumno en la toma rápida de decisiones.</li>
+      <li>El objetivo es que el alumno comprenda la teoría y aprenda el "saber-hacer".</li>
+    </ul></div>
+  </div>
+
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="card-icon blue">🏗️</div><div class="card-body"><h3>Método de Proyectos</h3><p>Los alumnos diseñan una investigación de mercados para una empresa real.</p></div></div>
+    <div class="expand-content"><ul>
+      <li>Los alumnos seleccionan un proyecto sobre necesidades de información de una empresa.</li>
+      <li>Promueve identificar problemas, trabajo en equipo y capacidad de análisis.</li>
+      <li>Cada equipo comparte su experiencia con el resto del grupo.</li>
+    </ul></div>
+  </div>
+
+  <p class="section-title" style="margin-top:16px">Sistema de evaluación</p>
+  <div class="card" onclick="toggleExpand(this)">
+    <div class="card-header"><div class="card-icon amber">📊</div><div class="card-body"><h3>Distribución de Calificaciones</h3><p>Pruebas acumulativas 70% + Examen final 30%</p></div></div>
+    <div class="card-meta"><span class="tag horas">Acumulativa 70%</span><span class="tag mes">Final 30%</span></div>
+    <div class="expand-content"><ul>
+      <li><strong>Prueba inicial/diagnóstica:</strong> Oral, al inicio de cada unidad. Sin calificación numérica.</li>
+      <li><strong>Evaluación acumulativa (70%):</strong> Pruebas escritas, orales, seminarios, trabajos de investigación.</li>
+      <li><strong>Evaluación final (30%):</strong> Al término del periodo anual. Cubre todo el programa.</li>
+      <li><strong>Instrumentos:</strong> Trabajos prácticos Moodle, investigación bibliográfica, seminario de defensa, examen parcial, trabajo final de investigación, examen final.</li>
+      <li>Art. 4, 5, 18, 19, 23 del Reglamento de Evaluación Institucional.</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- =================== CRONOGRAMA =================== -->
+<div class="section" id="sec-cronograma">
+  <p class="section-title">Cronograma de clases 2025</p>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot done"></div><div class="tl-card"><div class="week">Marzo – Semana 1</div><h4>Unidad I – Introducción</h4><p>Introducción a la IM. El papel de la investigación. Concepto. Terminologías. | Aprendizaje por proyectos · Seminario</p></div></div>
+    <div class="tl-item"><div class="tl-dot done"></div><div class="tl-card"><div class="week">Marzo – Semana 2</div><h4>Unidad I – Datos y Variables</h4><p>Datos primarios y secundarios. Variables controlables y no controlables. Muestreo, encuesta, censo, universo. | Aprendizaje por proyectos · Seminario</p></div></div>
+    <div class="tl-item"><div class="tl-dot done"></div><div class="tl-card"><div class="week">Marzo – Semana 3</div><h4>Unidad II – Planeación</h4><p>Decisión de investigar. Consideraciones preliminares. Relación gerencia–Investigación. | Aprendizaje basado en investigación · Seminario</p></div></div>
+    <div class="tl-item"><div class="tl-dot done"></div><div class="tl-card"><div class="week">Marzo – Semana 4</div><h4>Unidad II – Ética y Errores</h4><p>Personas que realizan la investigación. Errores en la investigación. La ética en la IM. | Aprendizaje basado en investigación · Seminario</p></div></div>
+    <div class="tl-item"><div class="tl-dot current"></div><div class="tl-card" style="border-color:var(--accent);border-width:2px"><div class="week" style="color:var(--accent)">📍 Abril – Semana 1 · Actual</div><h4>Unidad III – Proceso (I)</h4><p>Reconocer y definir el problema. Establecer la necesidad de información. | Estudio de casos · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Abril – Semana 2</div><h4>Unidad III – Proceso (II)</h4><p>Objetivos e información. Diseño de investigación. Fuentes de datos. Procedimiento de recolección. | Estudio de casos · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Abril – Semana 3</div><h4>Unidad III – Muestra y Campo</h4><p>Diseñar la muestra. Recolectar los datos. | Estudio de casos · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Abril – Semana 4</div><h4>Unidad III – Análisis y Resultados</h4><p>Procesar los datos. Analizar los datos. Presentar los resultados. | Estudio de casos · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Abril – Semana 5</div><h4>Unidad IV – Tipos de Investigación</h4><p>Tipos: Exploratorio, descriptivo y causal. Sesiones de grupos. | Foro/Debate · Trabajo de Investigación</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Mayo – Semana 2</div><h4>Unidad IV – Entrevistas</h4><p>Entrevista en profundidad. Técnicas de proyección. | Foro/Debate · Trabajo de Investigación</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Mayo – Semana 4</div><h4>Unidad IV – Encuesta y Observación</h4><p>Método de encuesta: telefónica, correo, personal. Métodos de observación. | Foro/Debate · Trabajo de Investigación</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Mayo – Semana 5</div><h4>Unidad IV – Experimentación</h4><p>Comparación encuestas/observación. Experimentación: laboratorio y campo. | Foro/Debate · Trabajo de Investigación</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Junio – Semana 2</div><h4>Unidad V – Muestreo Probabilístico</h4><p>Concepto e importancia. Aleatorio simple, sistemático, estratificado, conglomerados. | Aprendizaje basado en problemas · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Junio – Semana 3</div><h4>Unidad V – Muestreo No Probabilístico</h4><p>Conveniencia, juicio, cuotas, bola de nieve. | Aprendizaje basado en problemas · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Junio – Semana 4</div><h4>Unidad V – Tamaño de Muestra (Media)</h4><p>Determinación del tamaño de la muestra para estimar la media. | Aprendizaje basado en problemas · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Junio – Semana 5</div><h4>Unidad V – Tamaño de Muestra (Proporción)</h4><p>Tamaño de muestra para estimar la proporción. Usos del muestreo. | Aprendizaje basado en problemas · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Julio – Semana 1</div><h4>Unidad VI – Trabajo de Campo (I)</h4><p>Selección y capacitación de encuestadores. Contacto inicial. Cómo hacer preguntas. | Trabajo de campo · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Julio – Semana 2</div><h4>Unidad VI – Trabajo de Campo (II)</h4><p>Registro de respuestas. Cómo terminar la entrevista. | Trabajo de campo · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Agosto – Semana 2</div><h4>Unidad VI – Supervisión</h4><p>Supervisión de encuestadores. Validación del trabajo de campo. | Trabajo de campo · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Agosto – Semana 3</div><h4>Unidad VI – Calidad y Evaluación</h4><p>Evaluación de encuestadores. Tiempo y costo. Índice de respuesta. Calidad de la entrevista y datos. | Trabajo de campo · Trabajo práctico</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Agosto – Semana 4</div><h4>Unidad VII – Preparación y Tabulación</h4><p>Edición. Codificación. Depuración. Análisis univariado. Tabulación simple y cruzada. | ABP · Prueba lápiz y papel</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Agosto – Semana 5</div><h4>Unidad VII – Estadística Inferencial</h4><p>Estimación de parámetros. | Aprendizaje basado en problemas · Prueba lápiz y papel</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Septiembre – Semana 1</div><h4>Unidad VII – Intervalos de Confianza</h4><p>Intervalos de confianza para la media y para la proporción. | ABP · Prueba lápiz y papel</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Septiembre – Semana 2</div><h4>Unidad VII – Prueba de Hipótesis</h4><p>Prueba de hipótesis para media y proporciones. Prueba ji cuadrado. | ABP · Prueba lápiz y papel</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Septiembre – Semana 3</div><h4>Unidad VIII – Informes</h4><p>Guías para elaborar informes escritos. | Seminario · Prueba oral</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Septiembre – Semana 4</div><h4>Unidad VIII – Presentación</h4><p>Formato del informe. Tablas. Ayudas gráficas. Presentación oral. | Seminario · Prueba oral</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Octubre – Semanas 1–4</div><h4>Unidad IX – Aplicaciones</h4><p>Demanda, publicidad, distribución, precios. Ambientes de mercado. Mercados internacionales. | Investigación · Trabajo de investigación</p></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="week">Octubre – Semana 5</div><h4>🔁 REPASO GENERAL</h4><p>Proceso de la Investigación de Mercados – Foro/Debate · Seminario final</p></div></div>
+  </div>
+</div>
+
+<!-- =================== TRABAJOS PRÁCTICOS =================== -->
+<div class="section" id="sec-tp">
+  <p class="section-title">Trabajos prácticos en clase</p>
+
+  <div class="tp-card">
+    <div class="tp-header" onclick="toggleTP(this)">
+      <div class="tp-num">1</div>
+      <div class="tp-info"><h4>Análisis de caso empresarial</h4><p>Unidad III · Abril</p></div>
+      <span class="tp-chevron">▾</span>
+    </div>
+    <div class="tp-body">
+      <div class="tp-obj">🎯 <strong>Objetivo:</strong> Aplicar las etapas del proceso de investigación a una empresa real del entorno local.</div>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:7px"><strong>Instrucciones:</strong></p>
+      <ol class="tp-steps">
+        <li>Formen grupos de 3 a 4 estudiantes.</li>
+        <li>Seleccionen una empresa del sector comercial o servicios (puede ser local).</li>
+        <li>Identifiquen un problema de marketing que enfrenta dicha empresa.</li>
+        <li>Formulen el problema de investigación: objetivo general y dos específicos.</li>
+        <li>Determinen qué tipo de investigación aplicarían y justifiquen su elección.</li>
+        <li>Elaboren un resumen breve de investigación de una página y expónganlo al grupo.</li>
+      </ol>
+      <div class="tp-entrega">📎 Entrega: <span>Documento + exposición de 5 minutos en clase</span></div>
+    </div>
+  </div>
+
+  <div class="tp-card">
+    <div class="tp-header" onclick="toggleTP(this)">
+      <div class="tp-num">2</div>
+      <div class="tp-info"><h4>Diseño de cuestionario</h4><p>Unidad IV · Mayo</p></div>
+      <span class="tp-chevron">▾</span>
+    </div>
+    <div class="tp-body">
+      <div class="tp-obj">🎯 <strong>Objetivo:</strong> Diseñar un cuestionario válido para medir satisfacción del cliente usando escalas apropiadas.</div>
+      <ol class="tp-steps">
+        <li>Definan el producto o servicio a evaluar (mínimo 3 dimensiones).</li>
+        <li>Elaboren al menos 12 ítems usando escala de 5 puntos.</li>
+        <li>Incluyan 2 preguntas con diferencial semántico.</li>
+        <li>Agreguen preguntas demográficas: edad, sexo, frecuencia de uso.</li>
+        <li>Apliquen el cuestionario a 5 personas fuera del aula (prueba piloto).</li>
+        <li>Identifiquen y corrijan al menos 2 errores detectados en la prueba piloto.</li>
+        <li>Presenten la versión final con justificación de cada tipo de escala usada.</li>
+      </ol>
+      <div class="tp-entrega">📎 Entrega: <span>Cuestionario físico + informe de correcciones</span></div>
+    </div>
+  </div>
+
+  <div class="tp-card">
+    <div class="tp-header" onclick="toggleTP(this)">
+      <div class="tp-num">3</div>
+      <div class="tp-info"><h4>Diseño muestral</h4><p>Unidad V · Junio</p></div>
+      <span class="tp-chevron">▾</span>
+    </div>
+    <div class="tp-body">
+      <div class="tp-obj">🎯 <strong>Objetivo:</strong> Diseñar el plan de muestreo para una investigación de mercados.</div>
+      <ol class="tp-steps">
+        <li>Defina su producto/servicio y la población objetivo (universo).</li>
+        <li>Seleccione y justifique la técnica de muestreo más adecuada.</li>
+        <li>Calcule el tamaño de muestra necesario (use fórmulas vistas en clase).</li>
+        <li>Describa el procedimiento de selección de la muestra paso a paso.</li>
+        <li>Identifique posibles errores muestrales y cómo minimizarlos.</li>
+        <li>Compare con una alternativa de muestreo no probabilístico: ventajas y desventajas.</li>
+      </ol>
+      <div class="tp-entrega">📎 Entrega: <span>Informe escrito con cálculos y justificaciones</span></div>
+    </div>
+  </div>
+
+  <div class="tp-card">
+    <div class="tp-header" onclick="toggleTP(this)">
+      <div class="tp-num">4</div>
+      <div class="tp-info"><h4>Proyecto integrador final</h4><p>Unidades I–IX · Octubre</p></div>
+      <span class="tp-chevron">▾</span>
+    </div>
+    <div class="tp-body">
+      <div class="tp-obj">🎯 <strong>Objetivo:</strong> Realizar una investigación de mercados completa para la creación de una empresa o lanzamiento de un producto.</div>
+      <ol class="tp-steps">
+        <li>Usar la base de datos provista por el docente (50 encuestas simuladas).</li>
+        <li>Calcular estadísticas descriptivas: media, mediana, moda, desviación estándar.</li>
+        <li>Crear tablas de frecuencia para variables categóricas.</li>
+        <li>Elaborar al menos 3 gráficos: barras, circular y dispersión.</li>
+        <li>Aplicar pruebas de hipótesis e intervalos de confianza.</li>
+        <li>Redactar el informe final según la estructura vista en Unidad VIII.</li>
+        <li>Presentación oral ante el grupo (15 minutos).</li>
+      </ol>
+      <div class="tp-entrega">📎 Entrega: <span>Informe completo + presentación oral de defensa</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== TAREAS MOODLE =================== -->
+<div class="section" id="sec-tareas">
+  <p class="section-title">Tareas del aula virtual Moodle</p>
+
+  <div class="aula-btn" onclick="alert('El docente configurará el enlace al aula virtual Moodle de la UNP.')">
+    <span class="icon">🖥️</span>
+    <div><div style="font-size:12px">Acceder al Aula Virtual Moodle – UNP</div><div style="font-size:10px;opacity:.7;margin-top:1px">Campus Virtual · FCCAE</div></div>
+    <span style="margin-left:auto;font-size:15px">→</span>
+  </div>
+
+  <p class="section-title">Estado de entregas</p>
+
+  <div class="tarea-item">
+    <div class="tarea-dot entregado"></div>
+    <div class="tarea-content">
+      <h4>Actividad introductoria: "¿Qué es investigar?"</h4>
+      <p>Foro inicial de presentación e ideas previas sobre la investigación de mercados.</p>
+      <div class="tarea-fecha green">✅ Entregado – Semana 1</div>
+      <div style="margin-top:5px"><span class="tag entregado">Entregado</span></div>
+    </div>
+  </div>
+
+  <div class="tarea-item">
+    <div class="tarea-dot pendiente"></div>
+    <div class="tarea-content">
+      <h4>Lectura: Cap. 1 y 2 Malhotra</h4>
+      <p>Leer los dos primeros capítulos del texto base y completar el foro de reflexión con al menos 150 palabras.</p>
+      <div class="tarea-fecha red">⏰ Vence: Martes de la Semana 2</div>
+      <div style="margin-top:5px"><span class="tag pendiente">Pendiente</span></div>
+    </div>
+  </div>
+
+  <div class="tarea-item">
+    <div class="tarea-dot pronto"></div>
+    <div class="tarea-content">
+      <h4>Cuestionario de autoevaluación – Unidad III</h4>
+      <p>Completar el cuestionario de 10 preguntas sobre tipos de diseño de investigación en la plataforma.</p>
+      <div class="tarea-fecha amber">⏰ Vence: Martes de la Semana 5</div>
+      <div style="margin-top:5px"><span class="tag pronto">Próximo</span></div>
+    </div>
+  </div>
+
+  <div class="tarea-item">
+    <div class="tarea-dot pendiente"></div>
+    <div class="tarea-content">
+      <h4>Análisis de un artículo científico</h4>
+      <p>Buscar un artículo de investigación de mercados publicado en los últimos 3 años. Analizar metodología usada y subir resumen de una página.</p>
+      <div class="tarea-fecha red">⏰ Vence: Martes de la Semana 9</div>
+      <div style="margin-top:5px"><span class="tag pendiente">Pendiente</span></div>
+    </div>
+  </div>
+
+  <div class="tarea-item">
+    <div class="tarea-dot pendiente"></div>
+    <div class="tarea-content">
+      <h4>Tarea de muestreo – Ejercicios 1 al 5</h4>
+      <p>Resolver ejercicios de cálculo de tamaño muestral del módulo V. Subir hoja de trabajo en PDF.</p>
+      <div class="tarea-fecha red">⏰ Vence: Martes de la Semana 11</div>
+      <div style="margin-top:5px"><span class="tag pendiente">Pendiente</span></div>
+    </div>
+  </div>
+
+  <div class="aula-note">💡 Las nuevas tareas serán publicadas semanalmente en el Aula Virtual Moodle de la UNP. Revisá la plataforma todos los lunes.</div>
+</div>
+
+<!-- =================== MATERIALES DIDÁCTICOS =================== -->
+<div class="section" id="sec-materiales">
+  <p class="section-title">Materiales didácticos del docente</p>
+
+  <!-- Categorías predefinidas -->
+  <div class="mat-card">
+    <div class="mat-section-title">📚 Bibliografía básica</div>
+    <div class="mat-link-row"><span class="link-icon">📗</span><div><div class="link-text">Malhotra – Investigación de Mercados</div><div class="link-sub">Prentice Hall · 4ª edición · 2004</div></div><button class="mat-link-btn" onclick="alert('Solicitar al docente el acceso digital.')">Ver</button></div>
+    <div class="mat-link-row"><span class="link-icon">📘</span><div><div class="link-text">Plazas Rojas – IM: Enfoque Gerencial</div><div class="link-sub">1ª edición · 2011</div></div><button class="mat-link-btn" onclick="alert('Solicitar al docente el acceso digital.')">Ver</button></div>
+    <div class="mat-link-row"><span class="link-icon">📙</span><div><div class="link-text">Valderrey Sanz – IM: Enfoque Práctico</div><div class="link-sub">1ª edición · 2011</div></div><button class="mat-link-btn" onclick="alert('Solicitar al docente el acceso digital.')">Ver</button></div>
+    <div style="height:10px"></div>
+  </div>
+
+  <div class="mat-card">
+    <div class="mat-section-title">📎 Bibliografía complementaria</div>
+    <div class="mat-link-row"><span class="link-icon">📕</span><div><div class="link-text">Hair, Bush, Ortinau – Investigación de Mercados</div><div class="link-sub">2ª edición · 2005</div></div></div>
+    <div class="mat-link-row"><span class="link-icon">📕</span><div><div class="link-text">Guaragna & Fridman – IM en el Siglo XXI</div><div class="link-sub">2003</div></div></div>
+    <div class="mat-link-row"><span class="link-icon">📕</span><div><div class="link-text">Kotler – Dirección de Marketing</div><div class="link-sub">Prentice Hall · 12ª edición · 1998</div></div></div>
+    <div style="height:10px"></div>
+  </div>
+
+  <!-- Materiales del docente (dinámicos) -->
+  <div class="mat-card" id="matDocente">
+    <div class="mat-section-title">🗂️ Archivos y recursos del docente</div>
+    <div id="matList"><div class="mat-empty"><div class="empty-icon">📂</div><p>Aún no hay materiales publicados.<br>El docente irá agregando recursos aquí.</p></div></div>
+    <div class="mat-add-form" id="matAddForm" style="display:none">
+      <input type="text" id="matNombre" placeholder="Nombre del material (ej: Guía Unidad I)">
+      <input type="text" id="matUrl" placeholder="Enlace (URL) o descripción de ubicación">
+      <select id="matTipo">
+        <option value="📄">📄 Documento / PDF</option>
+        <option value="🎥">🎥 Video / Clase grabada</option>
+        <option value="📊">📊 Presentación / Diapositivas</option>
+        <option value="📝">📝 Ejercicios / Guía práctica</option>
+        <option value="🔗">🔗 Enlace / Recurso web</option>
+        <option value="📋">📋 Formulario / Cuestionario</option>
+        <option value="📁">📁 Otro</option>
+      </select>
+      <button class="mat-add-btn" onclick="addMaterial()">✚ Agregar material</button>
+    </div>
+    <div style="padding:8px 14px 12px;border-top:1px solid var(--border)">
+      <button onclick="toggleMatForm()" style="width:100%;padding:9px;background:var(--light);border:1.5px dashed var(--border);border-radius:9px;font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--mid);cursor:pointer" id="matToggleBtn">
+        ✚ Publicar nuevo material
+      </button>
+    </div>
+  </div>
+
+  <!-- Enlace rápido Moodle -->
+  <div class="mat-card">
+    <div class="mat-section-title">🌐 Recursos en línea</div>
+    <div class="mat-link-row"><span class="link-icon">🏫</span><div><div class="link-text">Aula Virtual Moodle – UNP</div><div class="link-sub">Campus de la Facultad de Ciencias Contables</div></div><button class="mat-link-btn" onclick="alert('Enlace configurado por el docente.')">Ir</button></div>
+    <div class="mat-link-row"><span class="link-icon">🌍</span><div><div class="link-text">Fuentes de información en internet</div><div class="link-sub">Google Scholar, JSTOR, SciELO, CEPAL</div></div><button class="mat-link-btn" onclick="window.open('https://scholar.google.com','_blank')">Ir</button></div>
+    <div style="height:10px"></div>
+  </div>
+</div>
+
+<!-- =================== SIMULACRO =================== -->
+<div class="section" id="sec-examen">
+  <p class="section-title">Simulacro de examen – 4 sesiones de práctica</p>
+  <div class="quiz-wrap">
+    <div class="quiz-session-tabs" id="qsTabs">
+      <button class="qs-tab active" onclick="selectSession(0,this)">Sesión 1 · Fundamentos</button>
+      <button class="qs-tab" onclick="selectSession(1,this)">Sesión 2 · Proceso y Métodos</button>
+      <button class="qs-tab" onclick="selectSession(2,this)">Sesión 3 · Muestreo</button>
+      <button class="qs-tab" onclick="selectSession(3,this)">Sesión 4 · Análisis e Informes</button>
+    </div>
+    <div class="quiz-header">
+      <h3 id="qsTitle">Sesión 1 · Fundamentos de la IM</h3>
+      <p id="qsDesc">12 preguntas · Opción múltiple · Con retroalimentación inmediata</p>
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="qBar" style="width:0%"></div></div>
+    </div>
+    <div class="quiz-body" id="quizBody">
+      <div id="quizStart" style="text-align:center;padding:18px 0">
+        <div style="font-size:44px;margin-bottom:10px">📝</div>
+        <p style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:7px">¿Listo para el simulacro?</p>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:18px;line-height:1.5">Respondé cada pregunta y recibirás retroalimentación inmediata. Podés repasar tantas veces como quieras.</p>
+        <button class="btn btn-primary" onclick="startQuiz()">Comenzar</button>
+      </div>
+      <div id="quizQuestion" style="display:none"></div>
+      <div id="quizResult" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== INFO =================== -->
+<div class="section" id="sec-info">
+  <div class="install-tip">
+    <h4>📲 Cómo instalar esta app en tu celular</h4>
+    <p>Agregá esta página a la pantalla de inicio:</p>
+    <ol>
+      <li><strong>Android (Chrome):</strong> Menú ⋮ → "Agregar a pantalla de inicio"</li>
+      <li><strong>iPhone (Safari):</strong> Botón compartir → "En el inicio"</li>
+      <li>Abrila directo desde el ícono en tu pantalla</li>
+    </ol>
+  </div>
+
+  <p class="section-title">Datos académicos</p>
+  <div class="info-block">
+    <h4>🎓 Información de la materia</h4>
+    <div class="info-row"><span class="key">Materia</span><span class="val" id="iMateria">Investigación de Mercados</span></div>
+    <div class="info-row"><span class="key">Carrera</span><span class="val" id="iCarrera">Administración de Empresas</span></div>
+    <div class="info-row"><span class="key">Facultad</span><span class="val" id="iFacultad">FCCAE – UNP</span></div>
+    <div class="info-row"><span class="key">Curso</span><span class="val" id="iCurso">3er Curso</span></div>
+    <div class="info-row"><span class="key">Docente</span><span class="val" id="iDocente">MSc Rubén Martínez</span></div>
+    <div class="info-row"><span class="key">Carga horaria</span><span class="val">85 hs anuales (50 teóricas / 35 prácticas)</span></div>
+    <div class="info-row"><span class="key">Modalidad</span><span class="val">Presencial + Aula Virtual Moodle</span></div>
+  </div>
+
+  <div class="info-block">
+    <h4>📊 Sistema de evaluación</h4>
+    <div class="info-row"><span class="key">Pruebas acumulativas</span><span class="val">70%</span></div>
+    <div class="info-row"><span class="key">Examen final</span><span class="val">30%</span></div>
+    <div class="info-row"><span class="key">Aprobación mínima</span><span class="val">70% de indicadores</span></div>
+    <div class="info-row"><span class="key">Ref. reglamento</span><span class="val">Art. 4, 5, 18, 19, 23</span></div>
+  </div>
+</div>
+
+<!-- =================== CONFIG =================== -->
+<div class="section" id="sec-config">
+  <p class="section-title">Personalizar la aplicación</p>
+  <div class="config-preview" id="cfgPreview">
+    <p>Vista previa</p>
+    <h3 id="prevMateria">Investigación de Mercados</h3>
+    <span id="prevSub">Adm. de Empresas · 3er Curso · FCCAE – UNP · MSc Rubén Martínez</span>
+  </div>
+  <div class="config-block">
+    <h4>🎓 Datos académicos</h4>
+    <div class="config-field"><label>Nombre de la Materia</label><input type="text" id="cfgMateria" placeholder="Ej: Investigación de Mercados" maxlength="60"></div>
+    <div class="config-field"><label>Nombre del Docente</label><input type="text" id="cfgDocente" placeholder="Ej: MSc Rubén Martínez" maxlength="60"></div>
+    <div class="config-field"><label>Carrera</label><input type="text" id="cfgCarrera" placeholder="Ej: Administración de Empresas" maxlength="60"></div>
+    <div class="config-field"><label>Facultad</label><input type="text" id="cfgFacultad" placeholder="Ej: FCCAE – UNP" maxlength="80"></div>
+    <div class="config-field"><label>Curso / Año</label><input type="text" id="cfgCurso" placeholder="Ej: 3er Curso" maxlength="30"></div>
+    <div class="config-field"><label>Año lectivo</label><input type="text" id="cfgAnio" placeholder="Ej: 2025" maxlength="10"></div>
+  </div>
+  <div class="config-block">
+    <h4>📊 Estadísticas del inicio</h4>
+    <div class="config-stats">
+      <div class="config-stat-field"><label>Número 1</label><input type="text" id="cfgNum1" placeholder="9" maxlength="6"><input type="text" id="cfgLbl1" placeholder="Unidades" maxlength="12" class="lbl-input" style="padding:5px 7px;font-size:10px;font-weight:600;color:var(--muted);text-align:center;border:1.5px solid var(--border);border-radius:8px;font-family:'Sora',sans-serif;background:var(--light);outline:none;margin-top:3px;width:100%"></div>
+      <div class="config-stat-field"><label>Número 2</label><input type="text" id="cfgNum2" placeholder="30" maxlength="6"><input type="text" id="cfgLbl2" placeholder="Semanas" maxlength="12" class="lbl-input" style="padding:5px 7px;font-size:10px;font-weight:600;color:var(--muted);text-align:center;border:1.5px solid var(--border);border-radius:8px;font-family:'Sora',sans-serif;background:var(--light);outline:none;margin-top:3px;width:100%"></div>
+      <div class="config-stat-field"><label>Número 3</label><input type="text" id="cfgNum3" placeholder="85" maxlength="6"><input type="text" id="cfgLbl3" placeholder="Horas" maxlength="12" class="lbl-input" style="padding:5px 7px;font-size:10px;font-weight:600;color:var(--muted);text-align:center;border:1.5px solid var(--border);border-radius:8px;font-family:'Sora',sans-serif;background:var(--light);outline:none;margin-top:3px;width:100%"></div>
+    </div>
+  </div>
+  <button class="btn-save" onclick="saveConfig()">💾 Guardar cambios</button>
+  <div class="save-msg" id="saveMsg">✅ ¡Cambios guardados correctamente!</div>
+</div>
+
+<script>
+// ============ NAVEGACIÓN ============
+function goTo(sec){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+sec).classList.add('active');
+  document.querySelector('[data-sec="'+sec+'"]').classList.add('active');
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>goTo(btn.dataset.sec));
+});
+
+// ============ EXPANDIR ============
+function toggleExpand(card){card.querySelector('.expand-content').classList.toggle('open')}
+function toggleTP(header){
+  const body=header.nextElementSibling,chevron=header.querySelector('.tp-chevron');
+  body.classList.toggle('open');chevron.classList.toggle('open');
+}
+
+// ============ MATERIALES ============
+let materials=JSON.parse(localStorage.getItem('unp_materials')||'[]');
+
+function renderMaterials(){
+  const list=document.getElementById('matList');
+  if(!materials.length){
+    list.innerHTML='<div class="mat-empty"><div class="empty-icon">📂</div><p>Aún no hay materiales publicados.<br>El docente irá agregando recursos aquí.</p></div>';return;
+  }
+  list.innerHTML=materials.map((m,i)=>`
+    <div class="mat-link-row">
+      <span class="link-icon">${m.tipo}</span>
+      <div style="flex:1">
+        <div class="link-text">${m.nombre}</div>
+        <div class="link-sub">${m.url||'Disponible en aula Moodle'}</div>
+      </div>
+      <button class="mat-link-btn" onclick="openMat('${m.url}')">Abrir</button>
+      <button class="mat-link-btn" style="color:var(--red);margin-left:4px" onclick="deleteMat(${i})">✕</button>
+    </div>`).join('');
+}
+
+function openMat(url){
+  if(url&&(url.startsWith('http')||url.startsWith('www')))window.open(url,'_blank');
+  else alert('Recurso disponible en el Aula Virtual Moodle de la UNP.');
+}
+
+function deleteMat(i){
+  if(confirm('¿Eliminar este material?')){
+    materials.splice(i,1);
+    localStorage.setItem('unp_materials',JSON.stringify(materials));
+    renderMaterials();
+  }
+}
+
+function toggleMatForm(){
+  const form=document.getElementById('matAddForm'),btn=document.getElementById('matToggleBtn');
+  const open=form.style.display==='block';
+  form.style.display=open?'none':'block';
+  btn.textContent=open?'✚ Publicar nuevo material':'✕ Cancelar';
+}
+
+function addMaterial(){
+  const nombre=document.getElementById('matNombre').value.trim();
+  const url=document.getElementById('matUrl').value.trim();
+  const tipo=document.getElementById('matTipo').value;
+  if(!nombre){alert('Ingresá el nombre del material.');return;}
+  materials.push({nombre,url,tipo});
+  localStorage.setItem('unp_materials',JSON.stringify(materials));
+  document.getElementById('matNombre').value='';
+  document.getElementById('matUrl').value='';
+  renderMaterials();
+  toggleMatForm();
+}
+
+renderMaterials();
+
+// ============ SIMULACRO – 4 SESIONES ============
+const sessions=[
+  {
+    title:'Sesión 1 · Fundamentos de la IM',
+    desc:'12 preguntas sobre Unidades I y II',
+    questions:[
+      {q:'¿Qué es la Investigación de Mercados según su definición académica?',opts:['Proceso de ventas de productos','Proceso de recopilar, analizar e interpretar información para tomar decisiones de marketing','Técnica de publicidad y promoción','Sistema de gestión de inventarios'],ans:1,exp:'La IM es el proceso sistemático de recopilar, analizar e interpretar información del mercado para facilitar la toma de decisiones de marketing.'},
+      {q:'¿Qué es el Sistema de Información de Mercadotecnia (SIM)?',opts:['Un software de ventas','Conjunto estructurado de personas, equipos y procedimientos para recopilar y analizar información','Una base de datos de clientes','Un registro de transacciones contables'],ans:1,exp:'El SIM es el conjunto de personas, equipos y procedimientos diseñados para recopilar, ordenar, analizar, evaluar y distribuir información para decisiones de marketing.'},
+      {q:'Las variables controlables de mercadotecnia incluyen:',opts:['Economía, competencia y cultura','Producto, precio, plaza y promoción (4P)','Demografía, tecnología y política','Clima, geografía y religión'],ans:1,exp:'Las variables controlables son las 4P: Producto, Precio, Plaza (distribución) y Promoción, que la empresa puede manipular directamente.'},
+      {q:'¿Qué son los datos primarios?',opts:['Datos publicados en libros de texto','Datos recolectados directamente para la investigación en curso','Datos de investigaciones anteriores','Datos del gobierno o instituciones'],ans:1,exp:'Los datos primarios son información recolectada directamente por el investigador para un propósito específico, mediante encuestas, observación o experimentación.'},
+      {q:'Un censo se diferencia de una muestra en que:',opts:['El censo es más rápido','El censo incluye a todos los elementos de la población','La muestra incluye toda la población','El censo es siempre más costoso'],ans:1,exp:'Un censo investiga a todos los elementos de la población objetivo, mientras que una muestra es un subconjunto representativo de ella.'},
+      {q:'¿Cuál es el papel principal de la investigación de mercados en una empresa?',opts:['Reemplazar al departamento de ventas','Reducir la incertidumbre en la toma de decisiones gerenciales','Diseñar los productos de la empresa','Controlar los estados financieros'],ans:1,exp:'La IM reduce la incertidumbre al proveer información relevante y oportuna que permite a los gerentes tomar decisiones de marketing más fundamentadas.'},
+      {q:'¿Qué considera la ética en la investigación de mercados?',opts:['Maximizar las ganancias de la empresa','Respetar la privacidad, honestidad y bienestar de los participantes','Realizar la investigación lo más rápido posible','Publicar todos los datos recopilados'],ans:1,exp:'La ética en IM implica respetar la confidencialidad, informar a los participantes sobre el uso de sus datos y no manipular ni falsificar resultados.'},
+      {q:'¿Qué tipo de error puede cometerse al planear la investigación?',opts:['Error de transcripción únicamente','Errores de muestreo, de instrumento, de trabajo de campo y de procesamiento','Solo errores estadísticos','Errores de publicidad'],ans:1,exp:'Los errores en IM pueden ser de muestreo (selección de participantes), de instrumento (cuestionario mal diseñado), de campo (entrevistador) o de procesamiento (codificación).'},
+      {q:'¿Quiénes pueden realizar una investigación de mercados?',opts:['Solo empresas multinacionales','Departamentos internos de la empresa o empresas especializadas externas','Solo el departamento de ventas','Solo universidades e institutos'],ans:1,exp:'La IM puede realizarla el propio departamento de la empresa o contratarse a una empresa externa especializada en investigación de mercados.'},
+      {q:'Las variables no controlables de mercadotecnia incluyen:',opts:['Producto y precio','Competencia, economía, demografía y tecnología','Distribución y promoción','Canales y fuerza de ventas'],ans:1,exp:'Las variables no controlables son el entorno externo: economía, competencia, cultura, tecnología, demografía, política y marco legal, que la empresa no puede manipular.'},
+      {q:'¿Por qué es importante decidir si llevar a cabo una investigación?',opts:['Para justificar el presupuesto de marketing','Para analizar si el costo de la investigación es menor que el beneficio esperado de la información','Para cumplir requisitos legales','Para contratar más personal'],ans:1,exp:'La decisión de investigar depende de si el valor de la información obtenida justifica el costo y el tiempo invertido en la investigación.'},
+      {q:'La relación gerencia–investigación es fundamental porque:',opts:['Los gerentes realizan las encuestas directamente','La gerencia debe definir el problema y el investigador debe traducirlo en objetivos de investigación','Solo los investigadores pueden tomar decisiones','Los gerentes procesan los datos estadísticos'],ans:1,exp:'La gerencia identifica la situación de decisión y el investigador la traduce en un problema de investigación; esta colaboración es esencial para el éxito del estudio.'},
+    ]
+  },
+  {
+    title:'Sesión 2 · Proceso y Métodos de Investigación',
+    desc:'12 preguntas sobre Unidades III y IV',
+    questions:[
+      {q:'¿Cuál es el primer paso del proceso de investigación de mercados?',opts:['Recolección de datos','Reconocer y definir el problema','Análisis de datos','Elaboración del informe'],ans:1,exp:'El primer paso es reconocer y definir correctamente el problema; sin ello toda la investigación pierde dirección y no podrá resolverse.'},
+      {q:'La investigación exploratoria se usa principalmente para:',opts:['Probar hipótesis específicas','Obtener información preliminar y comprender mejor el problema','Medir frecuencias exactas en la población','Determinar relaciones causa-efecto'],ans:1,exp:'La investigación exploratoria se utiliza cuando el problema no está bien definido y se necesita información preliminar para comprenderlo mejor.'},
+      {q:'La investigación descriptiva tiene como objetivo:',opts:['Explorar un fenómeno desconocido','Describir características de una población o fenómeno con precisión','Establecer relaciones de causalidad','Realizar experimentos de laboratorio'],ans:1,exp:'La investigación descriptiva describe con precisión las características de una población: frecuencias, promedios, proporciones, perfiles, etc.'},
+      {q:'¿Qué es un grupo focal (Focus Group)?',opts:['Una encuesta de grandes volúmenes de datos','Un pequeño grupo de 6-10 personas que discuten un tema moderado por un experto','Un experimento de laboratorio controlado','Un método de observación mecánica'],ans:1,exp:'El grupo focal reúne a 6-10 personas que discuten un tema guiados por un moderador, con el fin de explorar percepciones, actitudes y motivaciones.'},
+      {q:'La entrevista en profundidad se caracteriza por:',opts:['Ser masiva y rápida','Ser individual, larga y con preguntas abiertas para explorar motivaciones','Usar cuestionarios estandarizados','Realizarse por teléfono o correo electrónico'],ans:1,exp:'La entrevista en profundidad es una técnica cualitativa individual que usa preguntas abiertas para explorar en detalle las motivaciones, actitudes y comportamientos.'},
+      {q:'¿Qué método de encuesta tiene mayor tasa de respuesta?',opts:['Encuesta por correo postal','Encuesta telefónica','Encuesta personal cara a cara','Encuesta online'],ans:2,exp:'La encuesta personal cara a cara tiene la mayor tasa de respuesta aunque es la más costosa, porque permite aclarar dudas y mantener la atención del encuestado.'},
+      {q:'Los métodos de observación en investigación incluyen:',opts:['Solo la observación directa del investigador','Personal, mecánica y auditorías de producto/mercado','Solo cámaras y dispositivos electrónicos','Únicamente registros de ventas'],ans:1,exp:'Los métodos de observación son: personal (investigador observa directamente), mecánica (cámaras, contadores) y auditorías (revisión de inventarios y ventas en tiendas).'},
+      {q:'La investigación causal (experimental) busca:',opts:['Describir el mercado con precisión','Establecer relaciones de causa y efecto entre variables','Explorar el problema sin hipótesis','Recopilar datos secundarios del mercado'],ans:1,exp:'La investigación causal o experimental busca determinar si la manipulación de una variable (causa) produce cambios en otra (efecto), usando grupos control y experimental.'},
+      {q:'¿Qué son las técnicas de proyección en investigación cualitativa?',opts:['Métodos para calcular proyecciones financieras','Técnicas donde los sujetos revelan actitudes indirectamente mediante estímulos ambiguos','Métodos de observación mecánica','Técnicas de muestreo aleatorio'],ans:1,exp:'Las técnicas de proyección (asociación de palabras, completar frases, mapas mentales) permiten explorar motivaciones y actitudes que los entrevistados no revelan directamente.'},
+      {q:'¿En qué se diferencia el método experimental de laboratorio del de campo?',opts:['El de laboratorio es más barato','El de laboratorio controla variables en ambiente artificial; el de campo se realiza en contexto real','El de campo es más controlado','No hay diferencia entre ambos'],ans:1,exp:'El experimento de laboratorio se realiza en un ambiente controlado con alta validez interna; el experimento de campo se realiza en el contexto real con mayor validez externa.'},
+      {q:'Especificar los objetivos de investigación implica:',opts:['Solo definir el problema general','Redactar un objetivo general y objetivos específicos medibles y alcanzables','Seleccionar la muestra inmediatamente','Diseñar el cuestionario final'],ans:1,exp:'Los objetivos de investigación deben ser claros, específicos y medibles: el objetivo general describe el propósito global y los específicos detallan los aspectos a investigar.'},
+      {q:'¿Cuándo se usa la investigación cualitativa vs cuantitativa?',opts:['Siempre se usa cuantitativa primero','Cualitativa para explorar y comprender; cuantitativa para medir y cuantificar','Son exactamente iguales','La cuantitativa solo se usa en matemáticas'],ans:1,exp:'La investigación cualitativa explora y comprende motivaciones, actitudes y percepciones; la cuantitativa mide, cuantifica y genera datos estadísticamente representativos.'},
+    ]
+  },
+  {
+    title:'Sesión 3 · Diseño y Selección de la Muestra',
+    desc:'12 preguntas sobre Unidad V',
+    questions:[
+      {q:'¿Qué tipo de muestreo asigna probabilidades iguales a todos los elementos de la población?',opts:['Muestreo por cuotas','Muestreo por conveniencia','Muestreo aleatorio simple','Muestreo por conglomerados'],ans:2,exp:'El muestreo aleatorio simple garantiza que cada elemento de la población tiene la misma probabilidad de ser seleccionado, usando métodos como la tómbola o números aleatorios.'},
+      {q:'En el muestreo estratificado, los estratos se forman según:',opts:['La conveniencia del investigador','Características homogéneas dentro del grupo y heterogéneas entre grupos','El orden cronológico del listado','El tamaño geográfico del área'],ans:1,exp:'En el muestreo estratificado la población se divide en estratos o subgrupos homogéneos internamente (ej: por edad, género, región), para luego muestrear proporcionalmente cada uno.'},
+      {q:'¿Qué es el marco muestral?',opts:['El tamaño óptimo de la muestra calculado','La lista completa de elementos de la población de donde se extrae la muestra','El presupuesto asignado para el muestreo','El porcentaje de error aceptable'],ans:1,exp:'El marco muestral es la lista o registro que contiene todos los elementos de la población objetivo, del cual se extrae la muestra (ej: padrón electoral, base de clientes).'},
+      {q:'¿Qué es el error de muestreo?',opts:['Errores en el diseño del cuestionario','Diferencia entre el valor estimado de la muestra y el verdadero valor de la población','Sesgos en las respuestas de los encuestados','Problemas en la codificación de datos'],ans:1,exp:'El error de muestreo es la diferencia entre el estadístico calculado con la muestra y el parámetro real de la población; disminuye al aumentar el tamaño muestral.'},
+      {q:'La fórmula n = Z² × p × q / e² se usa para:',opts:['Calcular el promedio de la muestra','Determinar el tamaño de muestra para estimar una proporción en población infinita','Calcular el intervalo de confianza','Determinar la varianza de los datos'],ans:1,exp:'Esta fórmula determina el tamaño de muestra necesario para estimar una proporción en poblaciones grandes (infinitas), donde Z es el nivel de confianza, p y q las proporciones y e el error máximo.'},
+      {q:'El muestreo sistemático consiste en:',opts:['Elegir aleatoriamente a todos los participantes','Seleccionar cada k-ésimo elemento de una lista ordenada','Dividir la población en estratos iguales','Elegir grupos completos al azar'],ans:1,exp:'En el muestreo sistemático se calcula k=N/n y se selecciona un punto de inicio aleatorio entre 1 y k, luego se elige cada k-ésimo elemento de la lista hasta completar la muestra.'},
+      {q:'¿Cuándo se recomienda el muestreo por conglomerados?',opts:['Cuando la población es homogénea y pequeña','Cuando la población está dispersa geográficamente y no hay marco muestral completo','Cuando se conoce exactamente la distribución de la población','Solo en estudios de laboratorio'],ans:1,exp:'El muestreo por conglomerados es útil cuando la población está dispersa geográficamente; se seleccionan grupos (áreas, ciudades) y se encuesta a todos o una muestra de cada grupo.'},
+      {q:'El muestreo de bola de nieve se usa principalmente para:',opts:['Poblaciones grandes y homogéneas','Poblaciones ocultas o de difícil acceso donde los participantes refieren a otros','Investigaciones experimentales controladas','Estudios con marco muestral completo'],ans:1,exp:'El muestreo bola de nieve se usa para poblaciones de difícil acceso (usuarios de drogas, ejecutivos de alto nivel, comunidades específicas) donde cada participante refiere a otros.'},
+      {q:'Si N=2.000, Z=1.96, p=0.5, q=0.5 y e=0.05, el tamaño de muestra es aproximadamente:',opts:['n = 384','n = 322','n = 500','n = 250'],ans:1,exp:'Aplicando la fórmula para población finita: n = (1.96² × 0.25 × 2000) / (0.0025 × 1999 + 1.96² × 0.25) = 1920.8 / (4.998 + 0.9604) = 1920.8 / 5.958 ≈ 322 personas.'},
+      {q:'¿Qué es el muestreo por cuotas?',opts:['Un muestreo probabilístico con grupos igualitarios','Un muestreo no probabilístico donde el investigador fija cuotas por categorías','Un muestreo aleatorio estratificado','Un método de observación mecánica'],ans:1,exp:'El muestreo por cuotas es no probabilístico; el investigador establece cuotas para subgrupos (ej: 50% hombres / 50% mujeres) y selecciona participantes hasta completar cada cuota.'},
+      {q:'La diferencia entre muestreo probabilístico y no probabilístico es:',opts:['El costo de aplicación','En el probabilístico cada elemento tiene probabilidad conocida de ser seleccionado; en el no probabilístico no','La cantidad de personas encuestadas','El tipo de cuestionario utilizado'],ans:1,exp:'En el muestreo probabilístico cada elemento tiene una probabilidad conocida y no nula de ser incluido, lo que permite calcular el error muestral. El no probabilístico no garantiza esto.'},
+      {q:'¿Para qué se determina el tamaño de la muestra para estimar la media?',opts:['Para calcular proporciones de la población','Para estimar el valor promedio de una variable cuantitativa continua con un nivel de precisión dado','Para seleccionar grupos focales','Para calcular frecuencias de respuestas'],ans:1,exp:'El tamaño de muestra para la media se calcula cuando se quiere estimar con precisión el promedio poblacional de una variable continua, usando la desviación estándar y el error permitido.'},
+    ]
+  },
+  {
+    title:'Sesión 4 · Análisis, Informes y Aplicaciones',
+    desc:'12 preguntas sobre Unidades VI, VII, VIII y IX',
+    questions:[
+      {q:'La codificación en el procesamiento de datos consiste en:',opts:['Escribir el informe final','Asignar valores numéricos a las categorías de respuesta para su análisis estadístico','Seleccionar la muestra de encuestados','Diseñar el cuestionario final'],ans:1,exp:'La codificación asigna un código numérico a cada categoría de respuesta (ej: Masculino=1, Femenino=2) para poder ingresar los datos en el sistema de análisis estadístico.'},
+      {q:'¿Qué es la tabulación cruzada?',opts:['Una tabla de una sola variable','Una tabla que muestra la distribución simultánea de dos variables para analizar su relación','Un gráfico de barras tridimensional','Un método de muestreo estratificado'],ans:1,exp:'La tabulación cruzada muestra la distribución conjunta de dos variables (ej: satisfacción × género), permitiendo analizar si existe relación o asociación entre ellas.'},
+      {q:'Un intervalo de confianza del 95% significa que:',opts:['El 95% de los encuestados respondió correctamente','Si repetimos el muestreo muchas veces, el 95% de los intervalos calculados contendrá el parámetro real','El error de muestreo es del 95%','Solo el 5% de los datos es confiable'],ans:1,exp:'Un intervalo de confianza del 95% indica que si el proceso de muestreo se repitiera infinitas veces, el 95% de los intervalos construidos contendrían el verdadero parámetro poblacional.'},
+      {q:'¿Qué evalúa la prueba ji cuadrado (χ²)?',opts:['La diferencia entre dos medias','La asociación o independencia entre dos variables categóricas','La varianza de una variable continua','La correlación lineal entre variables'],ans:1,exp:'La prueba chi-cuadrado evalúa si existe asociación estadísticamente significativa entre dos variables categóricas o nominales mediante la comparación de frecuencias observadas y esperadas.'},
+      {q:'¿Cuál es el propósito del resumen ejecutivo en el informe de investigación?',opts:['Presentar todos los datos estadísticos en detalle','Resumir en una página el problema, metodología, hallazgos principales y recomendación clave','Describir la bibliografía utilizada','Explicar el diseño muestral completo'],ans:1,exp:'El resumen ejecutivo es la sección más importante del informe pues resume en una página los elementos clave para el tomador de decisiones: problema, método, hallazgos y recomendación.'},
+      {q:'¿Qué sección del informe presenta los hallazgos detallados con tablas y gráficos?',opts:['Resumen ejecutivo','Marco teórico','Resultados y análisis','Conclusiones y recomendaciones'],ans:2,exp:'La sección de Resultados y Análisis presenta los datos procesados con tablas de frecuencia, gráficos estadísticos y el análisis de lo que significan los hallazgos para el problema.'},
+      {q:'¿Qué es la supervisión de encuestadores en el trabajo de campo?',opts:['Contratar a los encuestadores','Controlar que los encuestadores apliquen el cuestionario correctamente y con ética','Procesar los datos recolectados','Redactar el informe de hallazgos'],ans:1,exp:'La supervisión verifica que los encuestadores sigan el procedimiento correcto, realicen las entrevistas sin sesgo y completen adecuadamente los cuestionarios durante el trabajo de campo.'},
+      {q:'La prueba de hipótesis para la media poblacional se realiza cuando:',opts:['Se quiere estimar una proporción','Se quiere determinar si la media muestral es estadísticamente diferente de un valor hipotético','Se analizan variables nominales','Se calculan intervalos de confianza'],ans:1,exp:'La prueba de hipótesis para la media contrasta si la media calculada en la muestra es estadísticamente diferente del valor hipotético propuesto para la población, usando la prueba t o Z.'},
+      {q:'La investigación de mercados aplicada a productos incluye:',opts:['Solo el diseño del empaque','Pruebas de concepto, prototipo y mercado para evaluar la aceptación del producto','Únicamente el análisis de precios competidores','Solo estudios de distribución y logística'],ans:1,exp:'La investigación de productos abarca pruebas de concepto (idea), prototipo (producto físico) y mercado (lanzamiento controlado) para evaluar la aceptación antes del lanzamiento masivo.'},
+      {q:'¿Qué estudia la investigación publicitaria?',opts:['El precio óptimo de los productos','La eficacia de los mensajes, medios y campañas publicitarias','Los canales de distribución','La satisfacción posventa del cliente'],ans:1,exp:'La investigación publicitaria evalúa la efectividad de las campañas: recordación de marca, comprensión del mensaje, actitudes generadas y retorno de inversión publicitaria.'},
+      {q:'Las fuentes de información para mercados internacionales incluyen:',opts:['Solo datos de la empresa local','Organismos internacionales (ONU, OMC, BID), cámaras de comercio, embajadas y bases de datos globales','Solo encuestas realizadas en el exterior','Únicamente datos de exportadores nacionales'],ans:1,exp:'La información para mercados internacionales proviene de organismos como ONU, OMC, BID, FMI, además de cámaras de comercio, embajadas, consultoras especializadas y bases de datos globales.'},
+      {q:'La medición y pronóstico de la demanda en IM sirve para:',opts:['Controlar los costos de producción','Estimar el tamaño del mercado potencial y proyectar ventas futuras para planificar','Diseñar los productos de la empresa','Solo para fijar los precios de venta'],ans:1,exp:'La medición de demanda estima el tamaño actual del mercado y el pronóstico proyecta la demanda futura, permitiendo a la empresa planificar producción, inversión y estrategia comercial.'},
+    ]
+  }
+];
+
+let currentSession=0,curQ=0,score=0,answered=false;
+
+function selectSession(idx,tab){
+  document.querySelectorAll('.qs-tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  currentSession=idx;
+  curQ=0;score=0;answered=false;
+  document.getElementById('qsTitle').textContent=sessions[idx].title;
+  document.getElementById('qsDesc').textContent=sessions[idx].desc;
+  document.getElementById('qBar').style.width='0%';
+  document.getElementById('quizStart').style.display='block';
+  document.getElementById('quizQuestion').style.display='none';
+  document.getElementById('quizResult').style.display='none';
+}
+
+function startQuiz(){
+  curQ=0;score=0;
+  document.getElementById('quizStart').style.display='none';
+  document.getElementById('quizQuestion').style.display='block';
+  document.getElementById('quizResult').style.display='none';
+  renderQ();
+}
+
+function renderQ(){
+  answered=false;
+  const qs=sessions[currentSession].questions;
+  const q=qs[curQ];
+  const pct=(curQ/qs.length)*100;
+  document.getElementById('qBar').style.width=pct+'%';
+  document.getElementById('quizQuestion').innerHTML=`
+    <div class="quiz-q-num">Pregunta ${curQ+1} de ${qs.length}</div>
+    <div class="quiz-q-text">${q.q}</div>
+    <div class="quiz-options">
+      ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQ(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>
+    <div id="qFeedback"></div>
+    <div class="quiz-nav"><button class="btn btn-primary" onclick="nextQ()" id="btnNext" style="display:none">${curQ<qs.length-1?'Siguiente →':'Ver resultados'}</button></div>`;
+}
+
+function answerQ(idx){
+  if(answered)return;answered=true;
+  const q=sessions[currentSession].questions[curQ];
+  const opts=document.querySelectorAll('.quiz-opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  if(idx===q.ans){opts[idx].classList.add('correct');score++;document.getElementById('qFeedback').innerHTML=`<div class="quiz-feedback correct">✓ ¡Correcto! ${q.exp}</div>`;}
+  else{opts[idx].classList.add('wrong');opts[q.ans].classList.add('correct');document.getElementById('qFeedback').innerHTML=`<div class="quiz-feedback wrong">✗ Incorrecto. ${q.exp}</div>`;}
+  document.getElementById('btnNext').style.display='block';
+}
+
+function nextQ(){
+  curQ++;
+  const total=sessions[currentSession].questions.length;
+  if(curQ>=total)showResult();else renderQ();
+}
+
+function showResult(){
+  const total=sessions[currentSession].questions.length;
+  document.getElementById('qBar').style.width='100%';
+  document.getElementById('quizQuestion').style.display='none';
+  const res=document.getElementById('quizResult');res.style.display='block';
+  const pct=Math.round((score/total)*100);
+  const msg=pct>=80?'🏆 ¡Excelente! Estás muy bien preparado/a.':pct>=60?'📚 Buen trabajo. Repasá los temas donde fallaste.':'💪 Necesitás repasar más. ¡Volvé a intentarlo!';
+  res.innerHTML=`<div class="quiz-result"><div class="score">${pct}%</div><div class="score-sub">${score} de ${total} respuestas correctas</div><div class="msg">${msg}</div><button class="btn btn-primary" onclick="startQuiz()">Reintentar sesión</button><button class="btn btn-outline" onclick="goTo('programa')" style="margin-top:7px">Repasar contenidos</button></div>`;
+}
+
+// ============ CONFIGURACIÓN ============
+const DEFAULTS={materia:'Investigación de Mercados',docente:'MSc Rubén Martínez',carrera:'Administración de Empresas',facultad:'FCCAE – UNP',curso:'3er Curso',anio:'2025',num1:'9',lbl1:'Unidades',num2:'30',lbl2:'Semanas',num3:'85',lbl3:'Horas'};
+
+function loadConfig(){const cfg={};Object.keys(DEFAULTS).forEach(k=>{cfg[k]=localStorage.getItem('cfg_'+k)||DEFAULTS[k]});return cfg;}
+
+function abrevFac(f){if(!f)return '';const words=f.split(' ');if(words.length<=3)return f;return f;}
+
+function applyConfig(){
+  const cfg=loadConfig();
+  document.getElementById('dynTitle').textContent=cfg.materia;
+  document.getElementById('dynSub').textContent=[cfg.carrera,cfg.curso,cfg.facultad].filter(Boolean).join(' · ');
+  document.getElementById('dynAnio').textContent=cfg.anio;
+  document.getElementById('heroTitle').textContent=cfg.materia;
+  document.getElementById('heroSub').innerHTML=cfg.carrera+' · '+cfg.curso+'<br>'+cfg.docente+(cfg.facultad?' · '+cfg.facultad:'');
+  document.getElementById('hNum1').textContent=cfg.num1;document.getElementById('hLbl1').textContent=cfg.lbl1;
+  document.getElementById('hNum2').textContent=cfg.num2;document.getElementById('hLbl2').textContent=cfg.lbl2;
+  document.getElementById('hNum3').textContent=cfg.num3;document.getElementById('hLbl3').textContent=cfg.lbl3;
+  const iv=document.querySelectorAll('#sec-info .info-row .val');
+  if(iv[0])iv[0].textContent=cfg.materia;if(iv[1])iv[1].textContent=cfg.carrera;
+  if(iv[2])iv[2].textContent=cfg.facultad;if(iv[3])iv[3].textContent=cfg.curso;if(iv[4])iv[4].textContent=cfg.docente;
+  document.getElementById('cfgMateria').value=cfg.materia;document.getElementById('cfgDocente').value=cfg.docente;
+  document.getElementById('cfgCarrera').value=cfg.carrera;document.getElementById('cfgFacultad').value=cfg.facultad;
+  document.getElementById('cfgCurso').value=cfg.curso;document.getElementById('cfgAnio').value=cfg.anio;
+  document.getElementById('cfgNum1').value=cfg.num1;document.getElementById('cfgLbl1').value=cfg.lbl1;
+  document.getElementById('cfgNum2').value=cfg.num2;document.getElementById('cfgLbl2').value=cfg.lbl2;
+  document.getElementById('cfgNum3').value=cfg.num3;document.getElementById('cfgLbl3').value=cfg.lbl3;
+  updatePreview();
+}
+
+function updatePreview(){
+  const m=document.getElementById('cfgMateria').value||DEFAULTS.materia;
+  const c=document.getElementById('cfgCarrera').value||DEFAULTS.carrera;
+  const cu=document.getElementById('cfgCurso').value||DEFAULTS.curso;
+  const f=document.getElementById('cfgFacultad').value||DEFAULTS.facultad;
+  const d=document.getElementById('cfgDocente').value||DEFAULTS.docente;
+  document.getElementById('prevMateria').textContent=m;
+  document.getElementById('prevSub').textContent=[c,cu,f,d].filter(Boolean).join(' · ');
+}
+['cfgMateria','cfgDocente','cfgCarrera','cfgFacultad','cfgCurso'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',updatePreview);
+});
+
+function saveConfig(){
+  const fields={materia:'cfgMateria',docente:'cfgDocente',carrera:'cfgCarrera',facultad:'cfgFacultad',curso:'cfgCurso',anio:'cfgAnio',num1:'cfgNum1',lbl1:'cfgLbl1',num2:'cfgNum2',lbl2:'cfgLbl2',num3:'cfgNum3',lbl3:'cfgLbl3'};
+  Object.entries(fields).forEach(([k,id])=>{
+    const val=document.getElementById(id).value.trim();
+    if(val)localStorage.setItem('cfg_'+k,val);else localStorage.removeItem('cfg_'+k);
+  });
+  applyConfig();
+  const msg=document.getElementById('saveMsg');msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',3000);
+}
+
+window.addEventListener('DOMContentLoaded',applyConfig);
+</script>
+</body>
+</html>
