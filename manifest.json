@@ -1,0 +1,20 @@
+{
+  "name": "Investigación de Mercados",
+  "short_name": "Mercados",
+  "start_url": "IM_UNP_app.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#004080",
+  "icons": [
+    {
+      "src": "icono_investigacion.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icono_investigacion.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
